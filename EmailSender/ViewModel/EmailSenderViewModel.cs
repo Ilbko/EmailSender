@@ -1,4 +1,5 @@
-﻿using EmailSender.View.ViewModel;
+﻿using EmailSender.Model;
+using EmailSender.View.ViewModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -43,8 +44,8 @@ namespace EmailSender.ViewModel
             get 
             {
                 return addFileCommand ?? new RelayCommand(act => 
-                { 
-
+                {
+                    Files.Add(Logic.AddFile());
                 });
             }
         }
@@ -56,7 +57,7 @@ namespace EmailSender.ViewModel
             {
                 return deleteFileCommand ?? new RelayCommand(act =>
                 {
-
+                    Files.Remove(SelectedFile);
                 });
             }
         }
@@ -92,6 +93,8 @@ namespace EmailSender.ViewModel
 
         public EmailSenderViewModel()
         {
+            Files = new ObservableCollection<string>();
+
             this.TitleString = "Title";
             this.BodyString = "Body";
         }

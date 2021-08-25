@@ -3,9 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EmailSender"
+        xmlns:local="clr-namespace:EmailSender" xmlns:local1="clr-namespace:EmailSender.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="550" ResizeMode="NoResize">
+        Title="EmailSender" Height="350" Width="550" ResizeMode="NoResize">
+    <Window.Resources>
+        <local1:FileNameConverter x:Key="FileNameConverter"></local1:FileNameConverter>
+    </Window.Resources>
     <Grid Background="PeachPuff">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -62,7 +65,7 @@
         <StackPanel Grid.Column="0" Grid.Row="0">
             <TextBox Height="25" Text="{Binding TitleString}"></TextBox>
             <ScrollViewer>
-                <TextBox Height="213" Text="{Binding BodyString}"></TextBox>
+                <TextBox Height="213" TextWrapping="Wrap" Text="{Binding BodyString}"></TextBox>
             </ScrollViewer>
         </StackPanel>
 
@@ -78,11 +81,11 @@
             <PasswordBox x:Name="passPasswordBox" PasswordChar="*"></PasswordBox>
             <Label>Files</Label>
             <ScrollViewer>
-                <ListBox Height="100" DataContext="{Binding Files}" SelectedItem="{Binding SelectedFile}">
+                <ListBox Height="100" ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedFile}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <Label Content="{Binding}"></Label>
+                                <TextBlock Text="{Binding Converter={StaticResource FileNameConverter}}"></TextBlock>
                                 <Separator></Separator>
                             </StackPanel>
                         </DataTemplate>
@@ -92,7 +95,7 @@
         </StackPanel>
 
         <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom">
-            <Button Foreground="Indigo" Command="{Binding EmailSetupCommand}">Настроить почту</Button>
+            <Button Foreground="Indigo" Command="{Binding EmailSetupCommand}">Настроить почты</Button>
             <Button Foreground="Crimson" Command="{Binding StartCommand}">Старт</Button>
         </StackPanel>
     </Grid>
