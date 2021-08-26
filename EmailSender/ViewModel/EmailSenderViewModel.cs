@@ -6,6 +6,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.IO;
+using System;
+using System.Configuration;
+using System.Reflection;
 
 namespace EmailSender.ViewModel
 {
@@ -109,6 +113,16 @@ namespace EmailSender.ViewModel
         public void OnPropertyChanged([CallerMemberName] string prop = " ")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
+        private void SetConnectionString(string dbPath)
+        {
+            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings["EmailDB"];
+            
+            FieldInfo fieldInfo = typeof(ConfigurationElement).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+            fieldInfo.SetValue(settings, false);
+
+            settings.ConnectionString = $"Data Source = {dbPath}; Version = 3;";
+        }
+
         public EmailSenderViewModel(ref Button deleteFileButton)
         {
             this.Files = new ObservableCollection<string>();
@@ -117,6 +131,14 @@ namespace EmailSender.ViewModel
 
             this.TitleString = "Title";
             this.BodyString = "Body";
+
+            string dbPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + Logic.dbName;
+
+            SetConnectionString(dbPath);
+            //ConfigurationManager.ConnectionStrings["EmailDB"].ConnectionString = $"Data Source = {dbPath}; Version = 3;";
+            
+            if (!File.Exists(dbPath))
+                Logic.InitDB(dbPath);
         }
     }
 }

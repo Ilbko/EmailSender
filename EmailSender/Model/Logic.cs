@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using Dapper;
+using System;
+using System.Collections.ObjectModel;
+using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -8,6 +12,8 @@ namespace EmailSender.Model
 {
     public static class Logic
     {
+        public static readonly string dbName = "EmailDB.sqlite3";
+
         internal static string AddFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -47,11 +53,48 @@ namespace EmailSender.Model
 
                 return true;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {               
                 MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 
                 return false;
+            }
+        }
+
+        internal static void InitDB(string dbPath)
+        {
+            SQLiteConnection.CreateFile(dbPath);
+
+            const string procedure = "CREATE TABLE Email (" +
+                "Email_Id      INTEGER PRIMARY KEY AUTOINCREMENT" +
+                "                      UNIQUE" +
+                "                      NOT NULL," +
+                "Email_Address VARCHAR UNIQUE" +
+                "                      NOT NULL" +
+                "                      CHECK ( (Email_Address LIKE '%@%' AND" +
+                "                               Email_Address LIKE '%.%') )" +
+                ");";
+
+            using (SQLiteConnection db = new SQLiteConnection(Email_Repository.connStr))
+            {
+                db.Open();
+
+                //Невозможно выполнить с транзакцией.
+                //using (var transaction = db.BeginTransaction())
+                //{
+                //    try
+                //    {
+                //        db.Execute(procedure, transaction);
+                //        transaction.Commit();
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        transaction.Rollback();
+                //        throw ex;
+                //    }
+                //}
+
+                db.Execute(procedure);
             }
         }
     }
