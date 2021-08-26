@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace EmailSender.Model
@@ -17,7 +18,7 @@ namespace EmailSender.Model
     public static class Email_Repository
     {
         public static readonly string connStr = ConfigurationManager.ConnectionStrings["EmailDb"].ConnectionString;
-        public static List<Email> Select()
+        public static async Task<List<Email>> Select()
         {
             const string procedure = "SELECT * FROM [Email]";
 
@@ -30,7 +31,7 @@ namespace EmailSender.Model
                 {
                     try
                     {
-                        emails = db.Query<Email>(procedure, transaction).ToList();
+                        emails = (List<Email>)await db.QueryAsync<Email>(procedure, transaction).ConfigureAwait(false);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -44,7 +45,7 @@ namespace EmailSender.Model
             }
         }
 
-        public static void Delete(Email value)
+        public static async void Delete(Email value)
         {
             const string procedure = "DELETE FROM [Email] WHERE [Email_Id] = @Email_Id";
             var values = new { Email_Id = value.Email_Id };
@@ -57,7 +58,7 @@ namespace EmailSender.Model
                 {
                     try
                     {
-                        db.Query(procedure, values, transaction);
+                        await db.QueryAsync(procedure, values, transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -69,7 +70,7 @@ namespace EmailSender.Model
             }
         }
 
-        public static void Insert(Email value)
+        public static async void Insert(Email value)
         {
             const string procedure = "INSERT INTO [Email] ([Email_Address]) VALUES (@Email_Address)";
             var values = new { Email_Address = value.Email_Address };
@@ -82,7 +83,7 @@ namespace EmailSender.Model
                 {
                     try
                     {
-                        db.Query(procedure, values, transaction);
+                        await db.QueryAsync(procedure, values, transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)

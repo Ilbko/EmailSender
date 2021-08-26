@@ -2,10 +2,10 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EmailSender.Model
@@ -46,10 +46,12 @@ namespace EmailSender.Model
                     From = fromAddress,
                 };
 
-                Email_Repository.Select().ForEach(x => mailMessage.To.Add(new MailAddress(x.Email_Address)));
+                Email_Repository.Select().Result.ForEach(x => mailMessage.To.Add(new MailAddress(x.Email_Address)));
                 files.ToList().ForEach(x => mailMessage.Attachments.Add(new Attachment(x)));
 
-                smtpClient.SendAsync(mailMessage, null);
+                //При попытке отправить письма асинхронно виснет. Microsoft рекомендует использовать библиотеку третьего лица MailKit вместо System.Net.Mail.
+                //smtpClient.SendMailAsync(mailMessage);
+                smtpClient.Send(mailMessage);
 
                 return true;
             }
@@ -61,7 +63,7 @@ namespace EmailSender.Model
             }
         }
 
-        internal static void InitDB(string dbPath)
+        internal static async void InitDB(string dbPath)
         {
             SQLiteConnection.CreateFile(dbPath);
 
@@ -94,7 +96,7 @@ namespace EmailSender.Model
                 //    }
                 //}
 
-                db.Execute(procedure);
+                await db.ExecuteAsync(procedure);
             }
         }
     }

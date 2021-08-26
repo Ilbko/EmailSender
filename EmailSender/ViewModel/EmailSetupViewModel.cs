@@ -65,7 +65,7 @@ namespace EmailSender.ViewModel
 
         private void UpdateEmails()
         {
-            this.Emails = new ObservableCollection<Email>(Email_Repository.Select());
+            this.Emails = new ObservableCollection<Email>(Email_Repository.Select().Result);
             OnPropertyChanged("Emails");
         }
 
