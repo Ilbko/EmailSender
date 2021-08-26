@@ -56,6 +56,7 @@ namespace EmailSender.ViewModel
             set { addressString = value; OnPropertyChanged("AddressString"); }
         }
 
+        //RelayCommand для добавления прикрепляемого файла в список
         private RelayCommand addFileCommand;
         public RelayCommand AddFileCommand
         {
@@ -71,6 +72,7 @@ namespace EmailSender.ViewModel
             }
         }
 
+        //RelayCommand для удаления прикрепляемого файла из списка
         private RelayCommand deleteFileCommand;
         public RelayCommand DeleteFileCommand
         {
@@ -83,6 +85,7 @@ namespace EmailSender.ViewModel
             }
         }
 
+        //RelayCommmand для настройки получателей письма через новое окно
         private RelayCommand emailSetupCommand;
         public RelayCommand EmailSetupCommand
         {
@@ -95,6 +98,7 @@ namespace EmailSender.ViewModel
             }
         }
 
+        //RelayCommand для начала отправки писем
         private GalaSoft.MvvmLight.Command.RelayCommand<PasswordBox> startCommand;
         public GalaSoft.MvvmLight.Command.RelayCommand<PasswordBox> StartCommand
         {
@@ -113,6 +117,7 @@ namespace EmailSender.ViewModel
         public void OnPropertyChanged([CallerMemberName] string prop = " ")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
+        //Метод для установки строки подключения в App.config через рефлексию
         private void SetConnectionString(string dbPath)
         {
             ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings["EmailDB"];

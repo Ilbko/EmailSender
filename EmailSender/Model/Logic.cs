@@ -5,15 +5,16 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EmailSender.Model
 {
     public static class Logic
     {
+        //Название файла базы данных
         public static readonly string dbName = "EmailDB.sqlite3";
 
+        //Метод добавления пути к прикрепляемому файлу
         internal static string AddFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -26,6 +27,7 @@ namespace EmailSender.Model
             return null;
         }
 
+        //Метод отправки сообщения адресатам
         internal static bool StartSend(string addressString, string password, string titleString, string bodyString, ObservableCollection<string> files)
         {
             try
@@ -63,6 +65,7 @@ namespace EmailSender.Model
             }
         }
 
+        //Метод инициализации базы данных, если её нет
         internal static async void InitDB(string dbPath)
         {
             SQLiteConnection.CreateFile(dbPath);
@@ -95,8 +98,14 @@ namespace EmailSender.Model
                 //        throw ex;
                 //    }
                 //}
-
-                await db.ExecuteAsync(procedure);
+                try
+                {
+                    await db.ExecuteAsync(procedure);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }

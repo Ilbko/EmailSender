@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SQLite;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -18,6 +17,8 @@ namespace EmailSender.Model
     public static class Email_Repository
     {
         public static readonly string connStr = ConfigurationManager.ConnectionStrings["EmailDb"].ConnectionString;
+
+        //Метод для выборки всех записей в таблице
         public static async Task<List<Email>> Select()
         {
             const string procedure = "SELECT * FROM [Email]";
@@ -45,6 +46,7 @@ namespace EmailSender.Model
             }
         }
 
+        //Метод для удаления записи с таблицы
         public static async void Delete(Email value)
         {
             const string procedure = "DELETE FROM [Email] WHERE [Email_Id] = @Email_Id";
@@ -70,6 +72,7 @@ namespace EmailSender.Model
             }
         }
 
+        //Метод для добавления записи в таблицу
         public static async void Insert(Email value)
         {
             const string procedure = "INSERT INTO [Email] ([Email_Address]) VALUES (@Email_Address)";

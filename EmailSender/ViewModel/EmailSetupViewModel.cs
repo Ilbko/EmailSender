@@ -36,6 +36,7 @@ namespace EmailSender.ViewModel
             set { addressString = value; OnPropertyChanged("AddressString"); }
         }
 
+        //RelayCommand для добавления адреса адресатов
         private RelayCommand<TextBox> addEmailCommand;
         public RelayCommand<TextBox> AddEmailCommand
         {
@@ -50,6 +51,7 @@ namespace EmailSender.ViewModel
             }
         }
 
+        //Relaycommand для удаления адреса адресатов
         private RelayCommand deleteEmailCommand;
         public RelayCommand DeleteEmailCommand
         {
@@ -63,6 +65,7 @@ namespace EmailSender.ViewModel
             }
         }
 
+        //Метод для обновления списка адресатов
         private void UpdateEmails()
         {
             this.Emails = new ObservableCollection<Email>(Email_Repository.Select().Result);
