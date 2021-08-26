@@ -1,8 +1,11 @@
 ﻿using EmailSender.Model;
+using EmailSender.View;
 using EmailSender.View.ViewModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace EmailSender.ViewModel
 {
@@ -10,11 +13,22 @@ namespace EmailSender.ViewModel
     {
         public ObservableCollection<string> Files { get; set; }
 
+        private Button deleteFileButton;
+
         private string selectedFile;
         public string SelectedFile
         {
             get { return selectedFile; }
-            set { selectedFile = value; OnPropertyChanged("SelectedFile"); }
+            set 
+            { 
+                selectedFile = value; 
+                OnPropertyChanged("SelectedFile");
+
+                if (SelectedFile != null)
+                    this.deleteFileButton.IsEnabled = true;
+                else
+                    this.deleteFileButton.IsEnabled = false;
+            }
         }
 
         private string titleString;
@@ -45,7 +59,10 @@ namespace EmailSender.ViewModel
             {
                 return addFileCommand ?? new RelayCommand(act => 
                 {
-                    Files.Add(Logic.AddFile());
+                    string filePath = Logic.AddFile();
+
+                    if (filePath != null)
+                        this.Files.Add(filePath);
                 });
             }
         }
@@ -57,7 +74,7 @@ namespace EmailSender.ViewModel
             {
                 return deleteFileCommand ?? new RelayCommand(act =>
                 {
-                    Files.Remove(SelectedFile);
+                    this.Files.Remove(SelectedFile);
                 });
             }
         }
@@ -69,19 +86,20 @@ namespace EmailSender.ViewModel
             {
                 return emailSetupCommand ?? new RelayCommand(act =>
                 {
-
+                    new EmailSetupWindow().ShowDialog();
                 });
             }
         }
 
-        private RelayCommand startCommand;
-        public RelayCommand StartCommand
+        private GalaSoft.MvvmLight.Command.RelayCommand<PasswordBox> startCommand;
+        public GalaSoft.MvvmLight.Command.RelayCommand<PasswordBox> StartCommand
         {
             get
             {
-                return startCommand ?? new RelayCommand(act =>
+                return startCommand ?? new GalaSoft.MvvmLight.Command.RelayCommand<PasswordBox>(act =>
                 {
-
+                    if (Logic.StartSend(this.AddressString, act.Password, this.TitleString, this.BodyString, this.Files))
+                        MessageBox.Show("Отправка успешна!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             }
         }
@@ -91,9 +109,11 @@ namespace EmailSender.ViewModel
         public void OnPropertyChanged([CallerMemberName] string prop = " ")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
-        public EmailSenderViewModel()
+        public EmailSenderViewModel(ref Button deleteFileButton)
         {
-            Files = new ObservableCollection<string>();
+            this.Files = new ObservableCollection<string>();
+
+            this.deleteFileButton = deleteFileButton;
 
             this.TitleString = "Title";
             this.BodyString = "Body";

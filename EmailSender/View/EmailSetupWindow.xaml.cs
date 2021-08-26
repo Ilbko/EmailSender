@@ -2,17 +2,17 @@
 using System;
 using System.Windows;
 
-namespace EmailSender
+namespace EmailSender.View
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для EmailSetupWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class EmailSetupWindow : Window
     {
-        public MainWindow()
+        public EmailSetupWindow()
         {
             InitializeComponent();
-            this.DataContext = new EmailSenderViewModel(ref deleteFileButton);
+            this.DataContext = new EmailSetupViewModel(ref deleteEmailButton);
 
             string themeName = "AppTheme";
 

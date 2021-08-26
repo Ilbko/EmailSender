@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
+using System.Linq;
+using System.Windows;
 
 namespace EmailSender.Model
 {
@@ -37,7 +36,7 @@ namespace EmailSender.Model
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        throw ex;
+                        MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
 
@@ -64,7 +63,32 @@ namespace EmailSender.Model
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        throw ex;
+                        MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
+        public static void Insert(Email value)
+        {
+            const string procedure = "INSERT INTO [Email] ([Email_Address]) VALUES (@Email_Address)";
+            var values = new { Email_Address = value.Email_Address };
+
+            using (SQLiteConnection db = new SQLiteConnection(connStr))
+            {
+                db.Open();
+
+                using (var transaction = db.BeginTransaction())
+                {
+                    try
+                    {
+                        db.Query(procedure, values, transaction);
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }

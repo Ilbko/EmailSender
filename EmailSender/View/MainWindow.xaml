@@ -19,49 +19,6 @@
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Grid.Resources>
-            <Style TargetType="TextBox">
-                <Setter Property="FontWeight" Value="Bold"></Setter>
-                <Setter Property="FontSize" Value="15"></Setter>
-                <Setter Property="Background" Value="LightGoldenrodYellow"></Setter>
-                <Setter Property="BorderBrush" Value="Goldenrod"></Setter>
-                <Setter Property="BorderThickness" Value="1"></Setter>
-                <Setter Property="Margin" Value="2, 2, 2, 2"></Setter>
-                <Setter Property="Foreground" Value="Indigo"></Setter>
-            </Style>
-            <Style TargetType="PasswordBox">
-                <Setter Property="FontWeight" Value="Bold"></Setter>
-                <Setter Property="FontSize" Value="15"></Setter>
-                <Setter Property="Background" Value="LightGoldenrodYellow"></Setter>
-                <Setter Property="BorderBrush" Value="Goldenrod"></Setter>
-                <Setter Property="BorderThickness" Value="1"></Setter>
-                <Setter Property="Margin" Value="2, 2, 2, 2"></Setter>
-                <Setter Property="Foreground" Value="Indigo"></Setter>
-            </Style>
-            <Style TargetType="Label">
-                <Setter Property="FontWeight" Value="Bold"></Setter>
-                <Setter Property="FontSize" Value="15"></Setter>
-                <Setter Property="Foreground" Value="Indigo"></Setter>
-            </Style>
-            <Style TargetType="Button">
-                <Setter Property="FontWeight" Value="Bold"></Setter>
-                <Setter Property="FontSize" Value="15"></Setter>
-                <Setter Property="Background" Value="LightGoldenrodYellow"></Setter>
-                <Setter Property="BorderBrush" Value="Goldenrod"></Setter>
-                <Setter Property="BorderThickness" Value="1"></Setter>
-                <Setter Property="Margin" Value="2, 2, 2, 2"></Setter>
-            </Style>
-            <Style TargetType="ListBox">
-                <Setter Property="FontWeight" Value="Bold"></Setter>
-                <Setter Property="FontSize" Value="15"></Setter>
-                <Setter Property="Background" Value="LightGoldenrodYellow"></Setter>
-                <Setter Property="BorderBrush" Value="Goldenrod"></Setter>
-                <Setter Property="BorderThickness" Value="1"></Setter>
-                <Setter Property="Margin" Value="2, 2, 2, 2"></Setter>
-                <Setter Property="Foreground" Value="Indigo"></Setter>
-            </Style>
-        </Grid.Resources>
-
         <StackPanel Grid.Column="0" Grid.Row="0">
             <TextBox Height="25" Text="{Binding TitleString}"></TextBox>
             <ScrollViewer>
@@ -71,7 +28,7 @@
 
         <StackPanel Grid.Column="1" Grid.Row="1">
             <Button Foreground="Indigo" Command="{Binding AddFileCommand}">Добавить файл</Button>
-            <Button Foreground="Crimson" Command="{Binding DeleteFileCommand}">Удалить файл</Button>
+            <Button x:Name="deleteFileButton" IsEnabled="False" Foreground="Crimson" Command="{Binding DeleteFileCommand}">Удалить файл</Button>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="0">
@@ -96,7 +53,7 @@
 
         <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom">
             <Button Foreground="Indigo" Command="{Binding EmailSetupCommand}">Настроить почты</Button>
-            <Button Foreground="Crimson" Command="{Binding StartCommand}">Старт</Button>
+            <Button Foreground="Crimson" Command="{Binding StartCommand}" CommandParameter="{Binding ElementName=passPasswordBox}">Старт</Button>
         </StackPanel>
     </Grid>
 </Window>
